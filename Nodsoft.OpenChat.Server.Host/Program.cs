@@ -1,11 +1,19 @@
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.EntityFrameworkCore;
+using Nodsoft.OpenChat.Server.Data;
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+builder.Services.AddDbContextPool<OpenChatDbContext>(o =>
+	o.UseNpgsql(builder.Configuration.GetConnectionString("Database"), p =>
+		p.EnableRetryOnFailure()));
+
+WebApplication? app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -16,28 +24,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-	"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.MapGet("/", () => 0);
 
-app.MapGet("/weatherforecast", () =>
+using (OpenChatDbContext db = app.Services.CreateScope().ServiceProvider.GetRequiredService<OpenChatDbContext>())
 {
-	var forecast = Enumerable.Range(1, 5).Select(index =>
-	   new WeatherForecast
-	   (
-		   DateTime.Now.AddDays(index),
-		   Random.Shared.Next(-20, 55),
-		   summaries[Random.Shared.Next(summaries.Length)]
-	   ))
-		.ToArray();
-	return forecast;
-})
-.WithName("GetWeatherForecast");
-
-app.Run();
-
-internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
-{
-	public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+	await db.Database.MigrateAsync();
 }
+
+await app.RunAsync();
