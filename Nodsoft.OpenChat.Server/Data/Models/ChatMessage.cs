@@ -4,7 +4,7 @@
 /// Represents a message in chat.
 /// </summary>
 /// <typeparam name="TUserId">User ID Type</typeparam>
-public class ChatMessage<TUserId> : IIdentifier<Guid> where TUserId : unmanaged
+public record ChatMessage<TUserId> : IIdentifier<Guid> where TUserId : unmanaged
 {
 	/// <summary>
 	/// ID of message

@@ -4,7 +4,7 @@
 /// Represents a user in chat.
 /// </summary>
 /// <typeparam name="TId">User ID type</typeparam>
-public class ChatUser<TId> : IIdentifier<TId> where TId : unmanaged
+public record ChatUser<TId> : IIdentifier<TId> where TId : unmanaged
 {
 	/// <summary>
 	/// ID of chat user
