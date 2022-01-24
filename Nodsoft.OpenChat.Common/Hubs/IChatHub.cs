@@ -5,7 +5,8 @@ namespace Nodsoft.OpenChat.Common.Hubs;
 /// <summary>
 /// Chat hub methods pushed by server.
 /// </summary>
-public interface IChatHubPush<TUserId> where TUserId : unmanaged
+/// <typeparam name="TUserId">User ID type</typeparam>
+public interface IChatHubPush<TUserId> where TUserId : notnull
 {
 	/// <summary>
 	/// Pushes a new message to the clients.
@@ -27,6 +28,20 @@ public interface IChatHubPush<TUserId> where TUserId : unmanaged
 	/// <param name="id">ID of deleted message</param>
 	/// <returns></returns>
 	public Task DeleteMessage(Guid id);
+
+	/// <summary>
+	/// Signals to all clients that a user has joined chat.
+	/// </summary>
+	/// <param name="user">Details of user who joined</param>
+	/// <returns></returns>
+	public Task UserJoined(ChatUserDTO<TUserId> user);
+
+	/// <summary>
+	/// Signalls to all clients that a user has left chat.
+	/// </summary>
+	/// <param name="userId">ID of user who left</param>
+	/// <returns></returns>
+	public Task UserLeft(TUserId userId);
 }
 
 /// <summary>

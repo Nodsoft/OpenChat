@@ -1,10 +1,12 @@
-﻿namespace Nodsoft.OpenChat.Server.Data.Models;
+﻿using Nodsoft.OpenChat.Common;
+
+namespace Nodsoft.OpenChat.Server.Data.Models;
 
 /// <summary>
 /// Represents a message in chat.
 /// </summary>
 /// <typeparam name="TUserId">User ID Type</typeparam>
-public record ChatMessage<TUserId> : IIdentifier<Guid> where TUserId : unmanaged
+public record ChatMessage<TUserId> : IIdentifier<Guid> where TUserId : notnull
 {
 	/// <summary>
 	/// ID of message
@@ -15,7 +17,7 @@ public record ChatMessage<TUserId> : IIdentifier<Guid> where TUserId : unmanaged
 	/// <summary>
 	/// ID of message's author
 	/// </summary>
-	public TUserId UserId { get; init; }
+	public TUserId UserId { get; init; } = default!;
 
 	/// <summary>
 	/// Author of the message

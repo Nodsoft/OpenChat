@@ -1,4 +1,6 @@
-﻿namespace Nodsoft.OpenChat.Server.Data;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Nodsoft.OpenChat.Server.Data;
 
 /// <summary>
 /// Flags a context as usable by OpenChat.
